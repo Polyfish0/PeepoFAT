@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:peepofat/ScanRoute.dart';
-import 'package:peepofat/StatsRoute.dart';
-import 'package:peepofat/SettingsRoute.dart';
+import 'package:peepofat/routes/scan_route.dart';
+import 'package:peepofat/routes/stats_route.dart';
+import 'package:peepofat/routes/settings_route.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:xiaomi_scale/xiaomi_scale.dart';
@@ -40,10 +40,10 @@ class _MainPage extends State<MainPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("PeepoFAT"),
-          leading: Image.asset("images/peepofat.png"),
+          leading: Image.asset("assets/images/peepofat.png"),
           bottom: const TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.query_stats)),
+              Tab(icon: Icon(Icons.bar_chart)),
               Tab(icon: Icon(Icons.sync)),
               Tab(icon: Icon(Icons.settings))
             ]
