@@ -14,7 +14,7 @@ class _ScanRoute extends State {
   double _weight = 0;
   bool _reading = false;
   String _buttonText = "Sync";
-  late StreamSubscription subscription;
+  late StreamSubscription _subscription;
   final MiScale _mi = MiScale.instance;
 
   void sync() async {
@@ -23,35 +23,61 @@ class _ScanRoute extends State {
       setState(() {
         _buttonText = "Warte auf Daten von der Waage";
       });
-      subscription = _mi.takeMeasurements().listen((MiScaleMeasurement measurement) {
+      _subscription = _mi.takeMeasurements().listen((MiScaleMeasurement measurement) {
         setState(() {
-          print(measurement.impedance);
-          print(measurement.stage);
-          _weight = measurement.weight;
           switch(measurement.stage) {
             case MiScaleMeasurementStage.MEASURED:
               _weight = measurement.weight;
+              _reading = false;
+              ScaffoldMessenger.of(context).clearMaterialBanners();
+              ScaffoldMessenger.of(context).showMaterialBanner(
+                MaterialBanner(
+                  content: const Text("Messung abgeschlossen."),
+                  actions: [MaterialButton(
+                    child: const Text("OK"),
+                    onPressed: () => ScaffoldMessenger.of(context).clearMaterialBanners()
+                  )]
+                )
+              );
+              _finishReading(measurement);
+              _subscription.cancel();
               break;
             case MiScaleMeasurementStage.MEASURING:
               _weight = measurement.weight;
               break;
             case MiScaleMeasurementStage.STABILIZED:
               _weight = measurement.weight;
+              ScaffoldMessenger.of(context).clearMaterialBanners();
+              ScaffoldMessenger.of(context).showMaterialBanner(
+                MaterialBanner(
+                  content: const Text("Gewicht gemessen, bitte bleibe auf der Wage stehen zum Messen der anderen Werte."),
+                  actions: [MaterialButton(
+                    child: const Text("Überspringen"),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).clearMaterialBanners();
+                      _reading = false;
+                      _finishReading(measurement);
+                      _subscription.cancel();
+                    },
+                  )]
+                )
+              );
 
               break;
             case MiScaleMeasurementStage.WEIGHT_REMOVED:
               _buttonText = "Sync";
+              _reading = false;
               showDialog(
                 context: context,
                 barrierDismissible: false,
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: const Text("Fehler"),
-                    content: const Text("Bitte bleibe bis zum ende auf der Waage stehen!"),
+                    content: const Text("Bitte bleibe bis zum Ende auf der Waage stehen!"),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text("OK!")
+                        child: const Text("OK")
                       )
                     ],
                   );
@@ -66,8 +92,12 @@ class _ScanRoute extends State {
       setState(() {
         _buttonText = "Sync";
       });
-      subscription.cancel();
+      _subscription.cancel();
     }
+  }
+
+  void _finishReading(measurement) {
+
   }
 
   @override
