@@ -1,13 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:peepofat/stats/body_measurement.dart';
 import 'package:xiaomi_scale/xiaomi_scale.dart';
 
+import '../stats/user_stats.dart';
+
 class ScanRoute extends StatefulWidget {
-  const ScanRoute({super.key});
+  late UserStats userStats;
+  ScanRoute(userStats, {super.key});
 
   @override
-  State<StatefulWidget> createState() => _ScanRoute();
+  State<StatefulWidget> createState() => _ScanRoute(userStats);
 }
 
 class _ScanRoute extends State {
@@ -16,6 +20,9 @@ class _ScanRoute extends State {
   String _buttonText = "Sync";
   late StreamSubscription _subscription;
   final MiScale _mi = MiScale.instance;
+  late UserStats userStats;
+
+  _ScanRoute(userStats);
 
   void sync() async {
     if(!_reading) {
@@ -39,7 +46,7 @@ class _ScanRoute extends State {
                   )]
                 )
               );
-              _finishReading(measurement);
+              _finishReading(measurement, false);
               _subscription.cancel();
               break;
             case MiScaleMeasurementStage.MEASURING:
@@ -56,7 +63,7 @@ class _ScanRoute extends State {
                     onPressed: () {
                       ScaffoldMessenger.of(context).clearMaterialBanners();
                       _reading = false;
-                      _finishReading(measurement);
+                      _finishReading(measurement, true);
                       _subscription.cancel();
                     },
                   )]
@@ -96,8 +103,47 @@ class _ScanRoute extends State {
     }
   }
 
-  void _finishReading(measurement) {
-
+  void _finishReading(MiScaleMeasurement measurement, bool skipped) {
+    if(skipped) {
+      userStats.addBodyMeasurement(
+        BodyMeasurement(
+          DateTime
+            .now()
+            .millisecondsSinceEpoch,
+          measurement.weight,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        )
+      );
+    } else {
+      MiScaleBodyData data = MiScaleBodyData(
+        gender: userStats.getGender(),
+        age: userStats.getAge(),
+        height: userStats.getSize(),
+        weight: measurement.weight,
+        impedance: measurement.impedance!
+      );
+      userStats.addBodyMeasurement(
+        BodyMeasurement(
+          DateTime
+            .now()
+            .millisecondsSinceEpoch,
+          measurement.weight,
+          measurement.impedance!,
+          data.bodyFat,
+          data.visceralFat,
+          data.boneMass,
+          data.water,
+          data.muscleMass,
+          data.lbmCoefficient
+        )
+      );
+    }
   }
 
   @override

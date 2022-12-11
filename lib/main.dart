@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:peepofat/routes/scan_route.dart';
 import 'package:peepofat/routes/stats_route.dart';
 import 'package:peepofat/routes/settings_route.dart';
+import 'package:peepofat/stats/user_stats.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:xiaomi_scale/xiaomi_scale.dart';
@@ -35,6 +36,7 @@ class MainPage extends StatefulWidget {
 class _MainPage extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
+    UserStats userStats = UserStats();
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -49,11 +51,11 @@ class _MainPage extends State<MainPage> {
             ]
           )
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            StatsRoute(),
-            ScanRoute(),
-            SettingsRoute()
+            StatsRoute(userStats),
+            ScanRoute(userStats),
+            SettingsRoute(userStats)
           ]
         ),
       )

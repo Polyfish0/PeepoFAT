@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:peepofat/stats/user_stats.dart';
 
 class SettingsRoute extends StatelessWidget {
-  const SettingsRoute({super.key});
+  late UserStats userStats;
+  SettingsRoute(userStats, {super.key});
 
   @override
   Widget build(BuildContext context) {
