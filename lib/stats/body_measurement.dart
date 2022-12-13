@@ -1,6 +1,7 @@
 class BodyMeasurement {
   final int id;
-  final DateTime unixTimestamp;
+  final int uid;
+  final DateTime date;
   final int weight;
   final int impedance;
   final double bodyFat;
@@ -13,7 +14,8 @@ class BodyMeasurement {
 
   const BodyMeasurement({
     required this.id,
-    required this.unixTimestamp,
+    required this.uid,
+    required this.date,
     required this.weight,
     required this.impedance,
     required this.bodyFat,
@@ -27,15 +29,15 @@ class BodyMeasurement {
 
   Map<String, dynamic> toMap() {
     return {
-      'unixTimestamp': unixTimestamp,
-      'weight': weight,
-      'impedance': impedance,
-      'bodyFat': bodyFat,
-      'boneMass': boneMass,
-      'water': water,
-      'muscleMass': muscleMass,
-      'bmi': bmi,
-      'lbmCoefficient': lbmCoefficient
+      "date": date,
+      "weight": weight,
+      "impedance": impedance,
+      "bodyFat": bodyFat,
+      "boneMass": boneMass,
+      "water": water,
+      "muscleMass": muscleMass,
+      "bmi": bmi,
+      "lbmCoefficient": lbmCoefficient
     };
   }
 }
