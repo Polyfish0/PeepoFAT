@@ -29,6 +29,8 @@ class BodyMeasurement {
 
   Map<String, dynamic> toMap() {
     return {
+      "id": id,
+      "uid": uid,
       "date": date,
       "weight": weight,
       "impedance": impedance,

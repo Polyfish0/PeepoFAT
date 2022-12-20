@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:peepofat/stats/body_measurement.dart';
 import 'package:sqflite/sqflite.dart';

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:peepofat/database/database_manager.dart';
 import 'package:peepofat/routes/scan_route.dart';
 import 'package:peepofat/routes/stats_route.dart';
 import 'package:peepofat/routes/settings_route.dart';
+import 'package:peepofat/stats/body_measurement.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:xiaomi_scale/xiaomi_scale.dart';
@@ -35,6 +37,8 @@ class MainPage extends StatefulWidget {
 class _MainPage extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
+    var f = DatabaseManager();
+    f.insertBodyMeasurement(BodyMeasurement(id: 1, uid: 1, date: DateTime.now(), weight: 80, impedance: 80, bodyFat: 80, visceralFat: 80, boneMass: 80, water: 80, muscleMass: 80, bmi: 80, lbmCoefficient: 80));
     return DefaultTabController(
       length: 3,
       child: Scaffold(
